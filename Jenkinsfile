@@ -24,7 +24,6 @@ pipeline {
             steps {
                 script{
                     withCredentials([string(credentialsId: 'docker-hub-password', variable: 'dckhubpwd')]) {
-                        sh 'echo $dckhubpwd'
                         sh 'docker login -u josemiguelchvz -p ${dckhubpwd}'
                     }
                     sh 'docker push josemiguelchvz/catapp'
