@@ -4,10 +4,15 @@ pipeline {
         maven 'maven'
     }
     stages {
-        stage('Build') {
+        stage('Build jar file') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/josemiguel-chvz/spring-api-example']]])
                 sh 'mvn clean install -DskipTests'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
             }
         }
         stage('Build docker image'){
