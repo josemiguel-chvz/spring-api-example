@@ -1,10 +1,10 @@
 pipeline {
     agent any
-    tools{
+    tools {
         maven 'maven'
     }
     stages {
-        stage('Build jar file') {
+        stage('Build JAR File') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/josemiguel-chvz/spring-api-example']]])
                 sh 'mvn clean install -DskipTests'
@@ -15,25 +15,23 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage('Build docker image'){
+        stage('Build Docker Image') {
             steps {
                 sh 'docker build -t josemiguelchvz/catapp .'
             }
         }
-        stage('Push docker image'){
+        stage('Push docker image') {
             steps {
-                script{
-                    withCredentials([string(credentialsId: 'docker-hub-password', variable: 'dckhubpwd')]) {
-                        sh 'docker login -u josemiguelchvz -p ${dckhubpwd}'
-                    }
-                    sh 'docker push josemiguelchvz/catapp'
+                withCredentials([string(credentialsId: 'dckrhubpassword', variable: 'dckpass')]) {
+                    sh 'docker login -u josemiguelchvz -p ${dckpass}'
                 }
+                sh 'docker push josemiguelchvz/catapp'
             }
         }
     }
     post {
-		always {
-			sh 'docker logout'
-		}
-	}
+        always {
+            sh 'docker logout'
+        }
+    }
 }
